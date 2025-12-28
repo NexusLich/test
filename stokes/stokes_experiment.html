@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="tk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stoksyň Usuly - Şepbeşiklik Koeffisiýenti</title>
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"> -->
+    <style>
+      /* Umumy stillar */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Header */
+      header {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      h1 {
+        color: #667eea;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        color: #666;
+        font-size: 1.1em;
+        font-weight: 300;
+      }
+
+      /* Kart stillar */
+      .card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        color: #667eea;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+
+      h3 {
+        color: #764ba2;
+        font-size: 1.3em;
+        margin: 25px 0 15px 0;
+        font-weight: 600;
+      }
+
+      p,
+      li {
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 15px;
+      }
+
+      ul {
+        padding-left: 25px;
+      }
+
+      /* Formula stili */
+      .formula {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 25px;
+        border-radius: 15px;
+        margin: 20px 0;
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: 600;
+        color: #333;
+        border-left: 5px solid #667eea;
+      }
+
+      /* Interaktiw hasaplaýjy */
+      .calculator-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #667eea;
+        font-weight: 600;
+        font-size: 0.95em;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1em;
+        transition: all 0.3s;
+        font-family: "Poppins", sans-serif;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 10px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      /* Netije bölümi */
+      .results {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .result-box {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+      }
+
+      .result-label {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .result-value {
+        font-size: 1.8em;
+        font-weight: 700;
+        color: #333;
+      }
+
+      /* Canvas konteyner */
+      .canvas-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px 0;
+        background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        border-radius: 15px;
+        padding: 30px;
+      }
+
+      canvas {
+        border: 3px solid white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Footer */
+      footer {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        text-align: center;
+        color: #666;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Responsive dizaýn */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 1.8em;
+        }
+
+        h2 {
+          font-size: 1.4em;
+        }
+
+        .formula {
+          font-size: 1.2em;
+          padding: 20px;
+        }
+
+        header,
+        .card {
+          padding: 20px;
+        }
+      }
+
+      /* Animasiýa üçin goşmaça stillar */
+      .animation-controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      .animation-controls button {
+        width: auto;
+        padding: 12px 30px;
+        font-size: 0.95em;
+      }
+
+      .highlight {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        padding: 20px;
+        border-radius: 15px;
+        margin: 20px 0;
+        border-left: 5px solid #ff6b6b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header>
+        <h1>🔬 Stoksyň Usuly</h1>
+        <p class="subtitle">
+          Suwuklygyň şepbeşiklik koeffisiýentini kesgitlemek
+        </p>
+      </header>
+
+      <!-- Tejribäniň maksady -->
+      <div class="card">
+        <h2>📋 Tejribäniň Maksady</h2>
+        <p>
+          Bu tejribäniň maksady Stoksyň usulyny ulanyp, suwuklygyň içinde peýda
+          bolýan garşylyk güýjüni öwrenmek we şol suwuklygyň şepbeşiklik
+          koeffisiýentini (η) kesgitlemekdir.
+        </p>
+        <p>
+          Kiçijik top suwuklygyň içinde düşende, onuň tizligi belli bir wagta
+          çenli köpelýär, soňra bolsa yzygiderli (terminal) tizlige ýetýär. Bu
+          hadysa arkaly suwuklygyň içki garşylygyny anyklamak mümkin.
+        </p>
+      </div>
+
+      <!-- Ulanylýan esbaplar -->
+      <div class="card">
+        <h2>🔧 Ulanylýan Esbaplar</h2>
+        <ul>
+          <li>
+            <strong>Aýna silindr</strong> - suwuklyk üçin gap (uzalyk bellikli)
+          </li>
+          <li>
+            <strong>Kiçijik metal toplar</strong> - belli radiusly we dykyzlykly
+          </li>
+          <li><strong>Suwuklyk</strong> - mysal üçin gliserin ýa-da ýag</li>
+          <li><strong>Sekuntomer</strong> - wagty ölçemek üçin</li>
+          <li><strong>Mikrometr</strong> - topuň radiusyny ölçemek üçin</li>
+          <li><strong>Termometr</strong> - temperatura gözegçilik üçin</li>
+        </ul>
+      </div>
+
+      <!-- Teoriýa we formula -->
+      <div class="card">
+        <h2>📐 Teoriýa we Stoksyň Formulasy</h2>
+        <p>
+          Suwuklygyň içinde hereket edýän kiçijik sferik jisime üç sany güýç
+          täsir edýär:
+        </p>
+        <ul>
+          <li><strong>Agyrlyk güýji (F<sub>g</sub>)</strong> - aşak tarapa</li>
+          <li>
+            <strong>Arhimed güýji (F<sub>A</sub>)</strong> - ýokary tarapa
+          </li>
+          <li>
+            <strong>Garşylyk güýji (F<sub>r</sub>)</strong> - hereket ugry
+            tersine
+          </li>
+        </ul>
+
+        <div class="highlight">
+          <h3>Stoksyň formulasy (garşylyk güýji):</h3>
+          <div class="formula">F<sub>r</sub> = 6πηrv</div>
+          <p style="text-align: center; margin-top: 10px">
+            bu ýerde: η - şepbeşiklik koeffisiýenti, r - topuň radiusy, v -
+            tizlik
+          </p>
+        </div>
+
+        <p>Terminal tizlige ýetende güýçler deňeşýär:</p>
+        <div class="formula">F<sub>g</sub> = F<sub>A</sub> + F<sub>r</sub></div>
+
+        <div class="highlight">
+          <h3>Şepbeşiklik koeffisiýentini hasaplamak üçin:</h3>
+          <div class="formula">
+            η = (2r²(ρ<sub>k</sub> - ρ<sub>s</sub>)g) / (9v)
+          </div>
+          <p style="text-align: center; margin-top: 10px">
+            ρ<sub>k</sub> - topuň dykyzlygy (kg/m³)<br />
+            ρ<sub>s</sub> - suwuklygyň dykyzlygy (kg/m³)<br />
+            g - erkin düşüş tizlenmesi (9.81 m/s²)<br />
+            v - terminal tizlik (m/s)
+          </p>
+        </div>
+      </div>
+
+      <!-- Tejribenin geçirilişi -->
+      <div class="card">
+        <h2>⚗️ Tejribenin Ädim-ädim Geçirilişi</h2>
+        <h3>1. Taýýarlyk</h3>
+        <ul>
+          <li>Aýna silindri suwuklyk (gliserin) bilen doldur</li>
+          <li>Topuň radiusyny mikrometr bilen ölç we ýaz</li>
+          <li>Silindriň üstünde iki sany bellik çyz (h aralygy)</li>
+        </ul>
+
+        <h3>2. Ölçeg</h3>
+        <ul>
+          <li>Topy silindr gapynyň merkezine ýuwaşlyk bilen goýber</li>
+          <li>Top birinji belgiden geçende sekuntomeri başlat</li>
+          <li>Ikinji belgiden geçende sekuntomeri duruzdur we wagty (t) ýaz</li>
+          <li>Bu amalyýaty 3-5 gezek gaýtala we ortaça bahany tap</li>
+        </ul>
+
+        <h3>3. Hasaplama</h3>
+        <ul>
+          <li>Tizligi hasapla: v = h / t</li>
+          <li>
+            Şepbeşiklik koeffisiýentini hasapla: η = 2r²(ρ<sub>k</sub> -
+            ρ<sub>s</sub>)g / (9v)
+          </li>
+        </ul>
+      </div>
+
+      <!-- Interaktiw hasaplaýjy -->
+      <div class="card">
+        <h2>🧮 Interaktiw Hasaplaýjy</h2>
+        <p>
+          Aşakdaky meýdanlara maglumat girizip, netijeleri awtomatiki hasaplaň:
+        </p>
+
+        <div class="calculator-grid">
+          <div class="input-group">
+            <label>Topuň radiusy (mm):</label>
+            <input type="number" id="radius" placeholder="5" step="0.1" />
+          </div>
+          <div class="input-group">
+            <label>Topuň dykyzlygy (kg/m³):</label>
+            <input type="number" id="densityBall" placeholder="7850" step="1" />
+          </div>
+          <div class="input-group">
+            <label>Suwuklygyň dykyzlygy (kg/m³):</label>
+            <input
+              type="number"
+              id="densityFluid"
+              placeholder="1260"
+              step="1"
+            />
+          </div>
+          <div class="input-group">
+            <label>Düşen aralygy h (cm):</label>
+            <input type="number" id="distance" placeholder="50" step="0.1" />
+          </div>
+          <div class="input-group">
+            <label>Düşme wagty t (s):</label>
+            <input type="number" id="time" placeholder="10.5" step="0.01" />
+          </div>
+        </div>
+
+        <button onclick="calculate()">Hasapla 🚀</button>
+
+        <div class="results" id="results" style="display: none">
+          <div class="result-box">
+            <div class="result-label">Tizlik (v)</div>
+            <div class="result-value" id="velocity">-</div>
+          </div>
+          <div class="result-box">
+            <div class="result-label">Şepbeşiklik (η)</div>
+            <div class="result-value" id="viscosity">-</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Canvas animasiýasy -->
+      <div class="card">
+        <h2>🎬 Animasiýa - Topuň Düşmegi</h2>
+        <p style="text-align: center; margin-bottom: 20px">
+          Topuň suwuklygyň içinde terminal tizlige ýetýänligini görmek üçin
+          animasiýany başladyň:
+        </p>
+
+        <div class="canvas-container">
+          <canvas id="experimentCanvas" width="400" height="600"></canvas>
+        </div>
+
+        <div class="animation-controls">
+          <button onclick="startAnimation()">Başlat ▶️</button>
+          <button onclick="resetAnimation()">Täzeden 🔄</button>
+        </div>
+      </div>
+
+      <!-- Mysal hasaplama -->
+      <div class="card">
+        <h2>📊 Mysal Hasaplama</h2>
+        <div class="highlight">
+          <h3>Berilen maglumatlar:</h3>
+          <ul>
+            <li>Topuň radiusy: r = 5 mm = 0.005 m</li>
+            <li>Topuň dykyzlygy: ρ<sub>k</sub> = 7850 kg/m³ (polat)</li>
+            <li>Suwuklygyň dykyzlygy: ρ<sub>s</sub> = 1260 kg/m³ (gliserin)</li>
+            <li>Düşen aralygy: h = 0.5 m</li>
+            <li>Düşme wagty: t = 10.5 s</li>
+            <li>g = 9.81 m/s²</li>
+          </ul>
+
+          <h3>Hasaplama:</h3>
+          <p><strong>1. Tizlik:</strong></p>
+          <div class="formula" style="font-size: 1.2em">
+            v = h / t = 0.5 / 10.5 = 0.0476 m/s
+          </div>
+
+          <p><strong>2. Şepbeşiklik koeffisiýenti:</strong></p>
+          <div class="formula" style="font-size: 1.2em">
+            η = (2 × 0.005² × (7850 - 1260) × 9.81) / (9 × 0.0476)
+          </div>
+          <div class="formula" style="font-size: 1.2em">
+            η = 0.0323 / 0.4284 = 0.753 Pa·s
+          </div>
+        </div>
+      </div>
+
+      <!-- Netije -->
+      <div class="card">
+        <h2>🎯 Netije we Hasabat</h2>
+        <p>
+          Bu tejribe arkaly biz Stoksyň usulyny ulanyp, suwuklygyň şepbeşiklik
+          koeffisiýentini kesgitledik. Bu usul laboratoriýa şertlerinde anyk
+          netije berýär we dürli suwuklyklaryň häsiýetlerini öwrenmek üçin
+          giňden ulanylýar.
+        </p>
+
+        <div class="highlight">
+          <h3>Möhüm bellikler:</h3>
+          <ul>
+            <li>Terminal tizlige ýetmek üçin topuň ýeterlik aralyk düşmeli</li>
+            <li>Temperatura üýtgemesi şepbeşiklige täsir edýär</li>
+            <li>Top silindr gapynyň diwaryna degmemeli</li>
+            <li>Netijäni takyklaşdyrmak üçin birnäçe gezek ölçeg geçirmeli</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer>
+        <p>
+          © 2025 Fizika Tejribe Iş - Stoksyň Usuly | Bilim maksatly web sahypasy
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      // Hasaplaýjy funksiýasy
+      function calculate() {
+        // Giriş maglumatlaryny al
+        const r = parseFloat(document.getElementById("radius").value) / 1000; // mm-den m-e
+        const densityBall = parseFloat(
+          document.getElementById("densityBall").value
+        );
+        const densityFluid = parseFloat(
+          document.getElementById("densityFluid").value
+        );
+        const h = parseFloat(document.getElementById("distance").value) / 100; // cm-den m-e
+        const t = parseFloat(document.getElementById("time").value);
+
+        // Barlaglary geçir
+        if (!r || !densityBall || !densityFluid || !h || !t) {
+          alert("Ähli meýdanlary dolduryň!");
+          return;
+        }
+
+        if (t <= 0 || h <= 0 || r <= 0) {
+          alert("Bahalar polo bolmaly!");
+          return;
+        }
+
+        // Hasaplamalar
+        const g = 9.81; // m/s²
+        const v = h / t; // Tizlik
+        const eta = (2 * r * r * (densityBall - densityFluid) * g) / (9 * v); // Şepbeşiklik
+
+        // Netijeleri görkez
+        document.getElementById("results").style.display = "grid";
+        document.getElementById("velocity").textContent = v.toFixed(4) + " m/s";
+        document.getElementById("viscosity").textContent =
+          eta.toFixed(4) + " Pa·s";
+      }
+
+      // Canvas animasiýa üçin üýtgeýjiler
+      const canvas = document.getElementById("experimentCanvas");
+      const ctx = canvas.getContext("2d");
+
+      let ballY = 50; // Topuň başlangyç pozisiýasy
+      let ballVelocity = 0; // Başlangyç tizlik
+      let isAnimating = false;
+      let animationId = null;
+
+      // Fizika parametrleri
+      const ballRadius = 15;
+      const maxVelocity = 3; // Terminal tizlik (piksel/frame)
+      const acceleration = 0.05; // Tizlenme
+      const cylinderTop = 80;
+      const cylinderBottom = canvas.height - 80;
+
+      // Canvas ölçegini responsive etmek
+      function resizeCanvas() {
+        const container = canvas.parentElement;
+        const maxWidth = Math.min(400, container.clientWidth - 60);
+        canvas.style.width = maxWidth + "px";
+        canvas.style.height = maxWidth * 1.5 + "px";
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      // Animasiýany çekmek
+      function drawExperiment() {
+        // Fony arassala
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Silindr gaby çyz
+        ctx.strokeStyle = "#667eea";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(80, cylinderTop, 240, cylinderBottom - cylinderTop);
+
+        // Suwuklyk (gradient)
+        const gradient = ctx.createLinearGradient(
+          80,
+          cylinderTop,
+          80,
+          cylinderBottom
+        );
+        gradient.addColorStop(0, "rgba(102, 126, 234, 0.2)");
+        gradient.addColorStop(1, "rgba(102, 126, 234, 0.5)");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(80, cylinderTop, 240, cylinderBottom - cylinderTop);
+
+        // Ölçeg çyzyklary
+        ctx.strokeStyle = "#ff6b6b";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(70, cylinderTop + 50);
+        ctx.lineTo(330, cylinderTop + 50);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(70, cylinderBottom - 50);
+        ctx.lineTo(330, cylinderBottom - 50);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Bellikler
+        ctx.fillStyle = "#ff6b6b";
+        ctx.font = "bold 14px Poppins";
+        ctx.fillText("h", 340, cylinderTop + 50);
+        ctx.fillText("başlangyç", 20, cylinderTop + 55);
+        ctx.fillText("ahyrky", 20, cylinderBottom - 45);
+
+        // Top çyz
+        ctx.beginPath();
+        ctx.arc(200, ballY, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "#764ba2";
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Güýçleri görkezmek (ok)
+        if (ballY > cylinderTop && ballY < cylinderBottom - ballRadius) {
+          // Agyrlyk güýji (aşak)
+          ctx.strokeStyle = "#ff6b6b";
+          ctx.lineWidth = 3;
+          drawArrow(200, ballY + ballRadius + 5, 200, ballY + ballRadius + 40);
+          ctx.fillStyle = "#ff6b6b";
+          ctx.font = "12px Poppins";
+          ctx.fillText("F_g", 205, ballY + ballRadius + 30);
+
+          // Arhimed güýji (ýokary)
+          ctx.strokeStyle = "#4ecdc4";
+          drawArrow(200, ballY - ballRadius - 5, 200, ballY - ballRadius - 30);
+          ctx.fillStyle = "#4ecdc4";
+          ctx.fillText("F_A", 205, ballY - ballRadius - 15);
+
+          // Garşylyk güýji (ýokary)
+          if (ballVelocity > 0.5) {
+            ctx.strokeStyle = "#ffa502";
+            drawArrow(
+              200,
+              ballY - ballRadius - 35,
+              200,
+              ballY - ballRadius - 55
+            );
+            ctx.fillStyle = "#ffa502";
+            ctx.fillText("F_r", 205, ballY - ballRadius - 40);
+          }
+        }
+
+        // Tizlik görkeziji
+        ctx.fillStyle = "#333";
+        ctx.font = "bold 16px Poppins";
+        ctx.fillText("Tizlik: " + ballVelocity.toFixed(2) + " m/s", 100, 40);
+
+        // Terminal tizlik habar
+        if (Math.abs(ballVelocity - maxVelocity) < 0.1) {
+          ctx.fillStyle = "#27ae60";
+          ctx.font = "bold 18px Poppins";
+          ctx.fillText("Terminal tizlik!", 120, 560);
+        }
+      }
+
+      // Ok çyzmak funksiýasy
+      function drawArrow(fromX, fromY, toX, toY) {
+        const headlen = 8;
+        const angle = Math.atan2(toY - fromY, toX - fromX);
+
+        ctx.beginPath();
+        ctx.moveTo(fromX, fromY);
+        ctx.lineTo(toX, toY);
+        ctx.lineTo(
+          toX - headlen * Math.cos(angle - Math.PI / 6),
+          toY - headlen * Math.sin(angle - Math.PI / 6)
+        );
+        ctx.moveTo(toX, toY);
+        ctx.lineTo(
+          toX - headlen * Math.cos(angle + Math.PI / 6),
+          toY - headlen * Math.sin(angle + Math.PI / 6)
+        );
+        ctx.stroke();
+      }
+
+      // Animasiýa aýlaw funksiýasy
+      function animate() {
+        if (!isAnimating) return;
+
+        // Tizlik artýar (terminal tizlige çenli)
+        if (ballVelocity < maxVelocity) {
+          ballVelocity += acceleration;
+        }
+
+        // Topuň pozisiýasyny täzele
+        ballY += ballVelocity;
+
+        // Silindr çäginde sakla
+        if (ballY > cylinderBottom - ballRadius) {
+          ballY = cylinderBottom - ballRadius;
+          isAnimating = false;
+        }
+
+        // Çyz
+        drawExperiment();
+
+        // Dowam et
+        if (isAnimating) {
+          animationId = requestAnimationFrame(animate);
+        }
+      }
+
+      // Animasiýany başlat
+      function startAnimation() {
+        if (isAnimating) return;
+
+        if (ballY >= cylinderBottom - ballRadius) {
+          resetAnimation();
+        }
+
+        isAnimating = true;
+        animate();
+      }
+
+      // Animasiýany täzeden başlat
+      function resetAnimation() {
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+        isAnimating = false;
+        ballY = cylinderTop + 50;
+        ballVelocity = 0;
+        drawExperiment();
+      }
+
+      // Başlangyç çyzgy
+      drawExperiment();
+
+      // Enter basganda hasaplama
+      document.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            calculate();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

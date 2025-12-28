@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">atwood</string>
+    <string name="title_activity_main">atwood</string>
+    <string name="package_name">com.freather.atwood</string>
+    <string name="custom_url_scheme">com.freather.atwood</string>
+</resources>

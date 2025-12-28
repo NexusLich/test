@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="tk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiziki Ölçegler we Ýalňyşlyklar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease;
+        }
+
+        .section h2 {
+            color: #764ba2;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin: 20px 0 10px 0;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-size: 1.2em;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .canvas-container {
+            position: relative;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        canvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .control-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #667eea50;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .measurement-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .measurement-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .measurement-row:last-child {
+            border-bottom: none;
+        }
+
+        .highlight {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .equipment-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .equipment-list li {
+            padding: 10px 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #764ba2;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+
+            .control-panel {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .subtitle {
+                font-size: 1em;
+            }
+
+            .section h2 {
+                font-size: 1.3em;
+            }
+
+            .formula {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ Fiziki Ölçegler we Ýalňyşlyklar</h1>
+            <p class="subtitle">Metallaryň çyzykly giňelmesi we elektrik garşylygy</p>
+        </header>
+
+        <!-- Tejribe barada maglumat -->
+        <div class="section">
+            <h2>📋 Tejribe barada</h2>
+            <p>Bu tejribede biz metallaryň temperatura täsirinde nähili giňelýändigini we olaryň elektrik garşylygynyň temperatura görä nähili üýtgeýändigini öwreneris.</p>
+            
+            <h3>🎯 Maksady:</h3>
+            <ul class="equipment-list">
+                <li><strong>1. Medeniýet ulýuligiň ölçegini tapmak:</strong> Ýyladylan tel näçe millimetr giňelýändigini kesgitlemek</li>
+                <li><strong>2. Sylag garşylygynyň üýtgemegini hasaplamak:</strong> Temperatura täsirinde garşylygyň nähili üýtgeýändigini bilmek</li>
+                <li><strong>3. Sylag garşylygynyň temperatura koeffisiýentini anyklamak:</strong> Bu metal üçin aýratyn san bahasyny tapmak</li>
+                <li><strong>4. Ýalňyşlyk ölçenilşi:</strong> Her ölçegde absolýut we görelde ýalňyşlyklary hasaplamak</li>
+            </ul>
+
+            <h3>🔧 Gerekli enjamlar:</h3>
+            <ul class="equipment-list">
+                <li>Mikrmetr (0.01 mm takyklygy bilen)</li>
+                <li>Termometr</li>
+                <li>Metal simler (mis, aýna, polat)</li>
+                <li>Ampermetr we woltmetr</li>
+                <li>Ysydyjy enjam</li>
+            </ul>
+        </div>
+
+        <!-- Ölçegleriň düşündirişi -->
+        <div class="section">
+            <h2>📏 Fiziki ölçegleriň nähili alynýandygy</h2>
+            
+            <h3>1️⃣ Birinji ädim: Başlangyç ölçegler</h3>
+            <p>Ilki bilen metal simiň başlangyç parametrlerini ölçeýäris:</p>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>Uzynlyk (l₀)</h4>
+                    <p>Metal simiň başlangyç uzynlygy</p>
+                    <p class="highlight">Mysal: 500 mm</p>
+                </div>
+                <div class="info-card">
+                    <h4>Temperatura (T₀)</h4>
+                    <p>Başlangyç temperatura</p>
+                    <p class="highlight">Mysal: 20°C</p>
+                </div>
+                <div class="info-card">
+                    <h4>Garşylyk (R₀)</h4>
+                    <p>Başlangyç elektrik garşylygy</p>
+                    <p class="highlight">Mysal: 2.5 Ω</p>
+                </div>
+            </div>
+
+            <h3>2️⃣ Ikinji ädim: Birnäçe gezek ölçeg almak</h3>
+            <p>Her ölçegi 3-5 gezek gaýtalamaly we ortaça bahany tapmaly:</p>
+            <div class="example-box">
+                <h4>Mysal: Uzalyş ölçegi</h4>
+                <p><strong>1-nji ölçeg:</strong> Δl₁ = 0.42 mm</p>
+                <p><strong>2-nji ölçeg:</strong> Δl₂ = 0.45 mm</p>
+                <p><strong>3-nji ölçeg:</strong> Δl₃ = 0.43 mm</p>
+                <p><strong>4-nji ölçeg:</strong> Δl₄ = 0.44 mm</p>
+                <p><strong>5-nji ölçeg:</strong> Δl₅ = 0.46 mm</p>
+                <div class="formula">
+                    Δl<sub>ortaça</sub> = (Δl₁ + Δl₂ + Δl₃ + Δl₄ + Δl₅) / 5 = 0.44 mm
+                </div>
+            </div>
+        </div>
+
+        <!-- Ýalňyşlyk hasaplamasy -->
+        <div class="section">
+            <h2>⚠️ Ýalňyşlyklaryň hasaplanylşy</h2>
+            
+            <h3>📐 Absolýut ýalňyşlyk (Δx)</h3>
+            <p>Absolýut ýalňyşlyk - bu ortaça baha bilen her bir ölçegiň arasyndaky tapawudyň ortaça bahasy:</p>
+            <div class="formula">
+                Δx = (|x₁ - x<sub>ortaça</sub>| + |x₂ - x<sub>ortaça</sub>| + ... + |xₙ - x<sub>ortaça</sub>|) / n
+            </div>
+            
+            <div class="example-box">
+                <h4>Mysal hasaplama:</h4>
+                <p>Δl<sub>ortaça</sub> = 0.44 mm üçin:</p>
+                <div class="formula">
+                    Δl = (|0.42-0.44| + |0.45-0.44| + |0.43-0.44| + |0.44-0.44| + |0.46-0.44|) / 5
+                    <br>
+                    Δl = (0.02 + 0.01 + 0.01 + 0.00 + 0.02) / 5 = 0.012 mm
+                </div>
+            </div>
+
+            <h3>📊 Görelde ýalňyşlyk (ε)</h3>
+            <p>Görelde ýalňyşlyk - bu absolýut ýalňyşlygyň ortaça bahä bolan gatnaşygy göterim görnüşinde:</p>
+            <div class="formula">
+                ε = (Δx / x<sub>ortaça</sub>) × 100%
+            </div>
+            
+            <div class="example-box">
+                <h4>Mysal hasaplama:</h4>
+                <div class="formula">
+                    ε = (0.012 / 0.44) × 100% = 2.73%
+                </div>
+                <div class="note">
+                    <strong>Bellik:</strong> Görelde ýalňyşlyk 5%-den az bolsa, ölçeg gowy hasaplanýar!
+                </div>
+            </div>
+
+            <h3>🎯 Netije ýazmak</h3>
+            <p>Ölçegiň netijesi şeýle ýazylýar:</p>
+            <div class="formula">
+                x = x<sub>ortaça</sub> ± Δx
+            </div>
+            <div class="example-box">
+                <h4>Mysal:</h4>
+                <div class="formula">
+                    Δl = (0.44 ± 0.012) mm
+                    <br>
+                    ε = 2.73%
+                </div>
+            </div>
+        </div>
+
+        <!-- Interaktiw animasiýa -->
+        <div class="section">
+            <h2>🎬 Interaktiw Animasiýa</h2>
+            <p>Aşakdaky düwmä basyp, ölçegleriň nähili alynýandygyny we ýalňyşlyklaryň nähili hasaplanýandygyny görüň:</p>
+            
+            <div class="control-panel">
+                <button onclick="startAnimation()">🚀 Animasiýany Başlat</button>
+                <button onclick="resetAnimation()">🔄 Täzeden</button>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="animCanvas" width="1000" height="600"></canvas>
+            </div>
+
+            <div class="measurement-display" id="measurementDisplay" style="display: none;">
+                <h3>📊 Ölçeg netijeleri:</h3>
+                <div id="measurementData"></div>
+            </div>
+        </div>
+
+        <!-- Formula düşündirişleri -->
+        <div class="section">
+            <h2>📐 Esasy formulalar</h2>
+            
+            <h3>1. Çyzykly giňelme koeffisiýenti:</h3>
+            <div class="formula">
+                α = Δl / (l₀ × ΔT)
+            </div>
+            <p><strong>Bu ýerde:</strong></p>
+            <ul class="equipment-list">
+                <li>α - çyzykly giňelme koeffisiýenti (1/°C)</li>
+                <li>Δl - uzynlygyň üýtgemesi (mm)</li>
+                <li>l₀ - başlangyç uzynlyk (mm)</li>
+                <li>ΔT - temperaturanyň üýtgemesi (°C)</li>
+            </ul>
+
+            <h3>2. Garşylygyň temperatura koeffisiýenti:</h3>
+            <div class="formula">
+                β = ΔR / (R₀ × ΔT)
+            </div>
+            <p><strong>Bu ýerde:</strong></p>
+            <ul class="equipment-list">
+                <li>β - garşylygyň temperatura koeffisiýenti (1/°C)</li>
+                <li>ΔR - garşylygyň üýtgemesi (Ω)</li>
+                <li>R₀ - başlangyç garşylyk (Ω)</li>
+                <li>ΔT - temperaturanyň üýtgemesi (°C)</li>
+            </ul>
+
+            <h3>3. Jemi garşylyk:</h3>
+            <div class="formula">
+                R = R₀(1 + β × ΔT)
+            </div>
+        </div>
+
+        <!-- Täzelikler barada -->
+        <div class="section">
+            <h2>💡 Peýdaly maslahatar</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>✅ Takyk ölçeg üçin:</h4>
+                    <p>Hemişe 3-5 gezek ölçeg alyň we ortaça bahany hasaplaň</p>
+                </div>
+                <div class="info-card">
+                    <h4>🌡️ Temperatura:</h4>
+                    <p>Temperatura üýtgändigine göz ýetiriň (iň az 40-50°C)</p>
+                </div>
+                <div class="info-card">
+                    <h4>🔍 Enjamlar:</h4>
+                    <p>Mikrmetri dogry ulanmak gaty möhüm - skowoz gysmaň!</p>
+                </div>
+                <div class="info-card">
+                    <h4>📝 Bellikler:</h4>
+                    <p>Ähli ölçegleri anyk we düzgün ýazyň</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Canvas we animasiýa üçin üýtgeýjiler
+        const canvas = document.getElementById('animCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationStep = 0;
+        let animationRunning = false;
+        let measurements = [];
+        let currentMeasurement = 0;
+
+        // Ölçeg maglumatlary (mysal)
+        const sampleMeasurements = [0.42, 0.45, 0.43, 0.44, 0.46];
+
+        // Animasiýany başlatmak funksiýasy
+        function startAnimation() {
+            if (animationRunning) return;
+            
+            animationRunning = true;
+            animationStep = 0;
+            currentMeasurement = 0;
+            measurements = [];
+            
+            document.getElementById('measurementDisplay').style.display = 'none';
+            
+            animateStep();
+        }
+
+        // Animasiýany täzeden başlatmak
+        function resetAnimation() {
+            animationRunning = false;
+            animationStep = 0;
+            currentMeasurement = 0;
+            measurements = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('measurementDisplay').style.display = 'none';
+            drawInitialState();
+        }
+
+        // Başlangyç ýagdaýy çyzmak
+        function drawInitialState() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Fon
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Sözbaşy
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Fiziki ölçegler we ýalňyşlyklar animasiýasy', canvas.width/2, 40);
+            
+            // Metal sim
+            ctx.strokeStyle = '#764ba2';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(100, 150);
+            ctx.lineTo(900, 150);
+            ctx.stroke();
+            
+            // Ölçeg nokatlary
+            drawMeasurementPoints(100, 150, 900, 150);
+            
+            // Düşündiriş
+            ctx.font = '18px Arial';
+            ctx.fillStyle = '#666';
+            ctx.fillText('Metal sim (başlangyç ýagdaýy)', canvas.width/2, 100);
+            
+            // Temperatura görkezijisi
+            drawThermometer(50, 250, 20);
+        }
+
+        // Ölçeg nokatlaryny çyzmak
+        function drawMeasurementPoints(x1, y1, x2, y2) {
+            ctx.fillStyle = '#667eea';
+            ctx.beginPath();
+            ctx.arc(x1, y1, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x2, y2, 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Ölçeg oklary
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 2;
+            drawArrow(x1, y1 + 30, x2, y2 + 30);
+            
+            // Uzynlyk ýazgysy
+            ctx.fillStyle = '#667eea';
+            ctx.font = '16px Arial';
+            ctx.fillText('l₀ = 500 mm', (x1 + x2) / 2, y1 + 60);
+        }
+
+        // Ok çyzmak funksiýasy
+        function drawArrow(x1, y1, x2, y2) {
+            const headlen = 10;
+            const angle = Math.atan2(y2 - y1, x2 - x1);
+            
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(x2, y2);
+            ctx.lineTo(x2 - headlen * Math.cos(angle - Math.PI / 6), y2 - headlen * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(x2 - headlen * Math.cos(angle + Math.PI / 6), y2 - headlen * Math.sin(angle + Math.PI / 6));
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Termometr çyzmak
+        function drawThermometer(x, y, temp) {
+            // Termometriň görnüşi
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(x, y, 30, 120, 5);
+            ctx.stroke();
+            
+            // Temperatura derejesi
+            const tempHeight = (temp / 100) * 100;
+            ctx.fillStyle = temp < 50 ? '#667eea' : '#ff6b6b';
+            ctx.fillRect(x + 5, y + 120 - tempHeight, 20, tempHeight);
+            
+            // Temperatura bahasy
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText(temp + '°C', x + 15, y + 150);
+        }
+
+        // Animasiýa ädimleri
+        function animateStep() {
+            if (!animationRunning) return;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Fon
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            if (animationStep === 0) {
+                // Başlangyç ýagdaý
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Ädim 1: Başlangyç ölçegler', canvas.width/2, 40);
+                
+                drawInitialState();
+                
+                setTimeout(() => {
+                    animationStep++;
+                    animateStep();
+                }, 2000);
+                
+            } else if (animationStep === 1) {
+                // Ysytmak
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Ädim 2: Metal simi ysytmak', canvas.width/2, 40);
+                
+                const temp = 20 + (80 * (Date.now() % 2000) / 2000);
+                drawThermometer(50, 250, Math.round(temp));
+                
+                // Metal sim giňelýär
+                const expansion = 20 * (Date.now() % 2000) / 2000;
+                ctx.strokeStyle = '#ff6b6b';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(100, 150);
+                ctx.lineTo(900 + expansion, 150);
+                ctx.stroke();
+                
+                drawMeasurementPoints(100, 150, 900 + expansion, 150);
+                
+                ctx.fillStyle = '#ff6b6b';
+                ctx.font = '18px Arial';
+                ctx.fillText('Sim ysyýar we giňelýär!', canvas.width/2, 100);
+                
+                setTimeout(() => {
+                    animationStep++;
+                    animateStep();
+                }, 3000);
+                
+            } else if (animationStep === 2) {
+                // Ölçeg almak
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Ädim 3: Ölçegleri almak', canvas.width/2, 40);
+                
+                drawThermometer(50, 250, 100);
+                
+                // Giňelen sim
+                ctx.strokeStyle = '#ff6b6b';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(100, 150);
+                ctx.lineTo(920, 150);
+                ctx.stroke();
+                
+                drawMeasurementPoints(100, 150, 920, 150);
+                
+                // Ölçegleri görkezmek
+                if (currentMeasurement < sampleMeasurements.length) {
+                    measurements.push(sampleMeasurements[currentMeasurement]);
+                    
+                    let yPos = 220;
+                    ctx.font = '18px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.fillStyle = '#333';
+                    
+                    measurements.forEach((m, i) => {
+                        const color = i === measurements.length - 1 ? '#667eea' : '#666';
+                        ctx.fillStyle = color;
+                        ctx.fillText(`${i + 1}-nji ölçeg: Δl${i + 1} = ${m.toFixed(2)} mm`, 150, yPos);
+                        yPos += 30;
+                    });
+                    
+                    currentMeasurement++;
+                    
+                    setTimeout(() => {
+                        animateStep();
+                    }, 1000);
+                } else {
+                    animationStep++;
+                    setTimeout(() => {
+                        animateStep();
+                    }, 1000);
+                }
+                
+            } else if (animationStep === 3) {
+                // Ortaça bahasyny hasaplamak
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Ädim 4: Ortaça bahasyny hasaplamak', canvas.width/2, 40);
+                
+                const sum = measurements.reduce((a, b) => a + b, 0);
+                const avg = sum / measurements.length;
+                
+                // Formulany görkezmek
+                ctx.fillStyle = '#667eea';
+                ctx.font = '20px Arial';
+                ctx.fillText('Δl ortaça = (Δl₁ + Δl₂ + Δl₃ + Δl₄ + Δl₅) / 5', canvas.width/2, 100);
+                
+                ctx.font = 'bold 22px Arial';
+                ctx.fillStyle = '#764ba2';
+                ctx.fillText(`Δl ortaça = ${avg.toFixed(2)} mm`, canvas.width/2, 140);
+                
+                // Ölçegleri tablisa görnüşinde görkezmek
+                let yPos = 200;
+                ctx.font = '18px Arial';
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#333';
+                
+                measurements.forEach((m, i) => {
+                    ctx.fillText(`${i + 1}-nji ölçeg: ${m.toFixed(2)} mm`, 200, yPos);
+                    yPos += 30;
+                });
+                
+                // Ortaça çyzyk
+                ctx.strokeStyle = '#764ba2';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([10, 5]);
+                ctx.beginPath();
+                ctx.moveTo(450, 190);
+                ctx.lineTo(450, 190 + measurements.length * 30);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                ctx.fillStyle = '#764ba2';
+                ctx.font = 'bold 18px Arial';
+                ctx.fillText(`Ortaça: ${avg.toFixed(2)} mm`, 470, 220);
+                
+                setTimeout(() => {
+                    animationStep++;
+                    animateStep();
+                }, 3000);
+                
+            } else if (animationStep === 4) {
+                // Absolýut ýalňyşlygy hasaplamak
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Ädim 5: Absolýut ýalňyşlygy hasaplamak', canvas.width/2, 40);
+                
+                const sum = measurements.reduce((a, b) => a + b, 0);
+                const avg = sum / measurements.length;
+                
+                // Tapawutlary hasaplamak
+                let diffSum = 0;
+                let yPos = 120;
+                
+                ctx.font = '18px Arial';
+                ctx.textAlign = 'left';
+                
+                measurements.forEach((m, i) => {
+                    const diff = Math.abs(m - avg);
+                    diffSum += diff;
+                    
+                    ctx.fillStyle = '#333';
+                    ctx.fillText(`|${m.toFixed(2)} - ${avg.toFixed(2)}| = ${diff.toFixed(3)} mm`, 150, yPos);
+                    yPos += 35;
+                });
+                
+                const absError = diffSum / measurements.length;
+                
+                // Netije
+                ctx.fillStyle = '#667eea';
+                ctx.font = 'bold 22px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Δl = ${absError.toFixed(3)} mm`, canvas.width/2, yPos + 40);
+                
+                // Formula
+                ctx.fillStyle = '#764ba2';
+                ctx.font = '18px Arial';
+                ctx.fillText('Δl = (|Δl₁ - Δl ortaça| + ... + |Δl₅ - Δl ortaça|) / 5', canvas.width/2, yPos + 80);
+                
+                setTimeout(() => {
+                    animationStep++;
+                    animateStep();
+                }, 3000);
+                
+            } else if (animationStep === 5) {
+                // Görelde ýalňyşlygy hasaplamak
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Ädim 6: Görelde ýalňyşlygy hasaplamak', canvas.width/2, 40);
+                
+                const sum = measurements.reduce((a, b) => a + b, 0);
+                const avg = sum / measurements.length;
+                
+                let diffSum = 0;
+                measurements.forEach(m => {
+                    diffSum += Math.abs(m - avg);
+                });
+                const absError = diffSum / measurements.length;
+                
+                const relError = (absError / avg) * 100;
+                
+                // Formula
+                ctx.fillStyle = '#667eea';
+                ctx.font = '20px Arial';
+                ctx.fillText('ε = (Δl / Δl ortaça) × 100%', canvas.width/2, 120);
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '18px Arial';
+                ctx.fillText(`ε = (${absError.toFixed(3)} / ${avg.toFixed(2)}) × 100%`, canvas.width/2, 170);
+                
+                // Netije
+                ctx.fillStyle = '#764ba2';
+                ctx.font = 'bold 32px Arial';
+                ctx.fillText(`ε = ${relError.toFixed(2)}%`, canvas.width/2, 240);
+                
+                // Baha bermek
+                ctx.font = '22px Arial';
+                if (relError < 5) {
+                    ctx.fillStyle = '#28a745';
+                    ctx.fillText('✓ Gowy netije! (ε < 5%)', canvas.width/2, 300);
+                } else {
+                    ctx.fillStyle = '#ffc107';
+                    ctx.fillText('⚠ Ölçegi gaýtalamaly (ε > 5%)', canvas.width/2, 300);
+                }
+                
+                // Grafiki görkezmek
+                drawErrorChart(avg, absError, 350);
+                
+                setTimeout(() => {
+                    animationStep++;
+                    animateStep();
+                }, 3000);
+                
+            } else if (animationStep === 6) {
+                // Jemleýji netijeler
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 28px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('🎯 Jemleýji netijeler', canvas.width/2, 50);
+                
+                const sum = measurements.reduce((a, b) => a + b, 0);
+                const avg = sum / measurements.length;
+                
+                let diffSum = 0;
+                measurements.forEach(m => {
+                    diffSum += Math.abs(m - avg);
+                });
+                const absError = diffSum / measurements.length;
+                const relError = (absError / avg) * 100;
+                
+                // Netijeleri çyzgy görnüşinde görkezmek
+                const results = [
+                    { label: 'Ölçegleriň sany', value: measurements.length, unit: 'sany' },
+                    { label: 'Ortaça uzalyş', value: avg.toFixed(2), unit: 'mm' },
+                    { label: 'Absolýut ýalňyşlyk', value: absError.toFixed(3), unit: 'mm' },
+                    { label: 'Görelde ýalňyşlyk', value: relError.toFixed(2), unit: '%' }
+                ];
+                
+                let yPos = 120;
+                ctx.textAlign = 'left';
+                ctx.font = '20px Arial';
+                
+                results.forEach((r, i) => {
+                    // Fon reňk
+                    ctx.fillStyle = i % 2 === 0 ? '#f0f0f0' : '#ffffff';
+                    ctx.fillRect(150, yPos - 25, 700, 40);
+                    
+                    // Tekst
+                    ctx.fillStyle = '#333';
+                    ctx.fillText(r.label + ':', 180, yPos);
+                    
+                    ctx.fillStyle = '#667eea';
+                    ctx.font = 'bold 20px Arial';
+                    ctx.fillText(r.value + ' ' + r.unit, 550, yPos);
+                    
+                    ctx.font = '20px Arial';
+                    yPos += 50;
+                });
+                
+                // Netije ýazgysy
+                ctx.fillStyle = '#764ba2';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Netije: Δl = (${avg.toFixed(2)} ± ${absError.toFixed(3)}) mm`, canvas.width/2, yPos + 40);
+                
+                // Tablisany görkezmek
+                setTimeout(() => {
+                    displayMeasurementTable(measurements, avg, absError, relError);
+                    animationRunning = false;
+                }, 1000);
+            }
+        }
+
+        // Ýalňyşlyk grafikini çyzmak
+        function drawErrorChart(avg, error, yStart) {
+            const barWidth = 60;
+            const spacing = 100;
+            const startX = 200;
+            
+            // Ortaça baha
+            ctx.fillStyle = '#667eea';
+            const avgHeight = avg * 100;
+            ctx.fillRect(startX, yStart - avgHeight, barWidth, avgHeight);
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Ortaça', startX + barWidth/2, yStart + 20);
+            ctx.fillText(avg.toFixed(2), startX + barWidth/2, yStart + 35);
+            
+            // Ýalňyşlyk
+            ctx.fillStyle = '#ff6b6b';
+            const errorHeight = error * 100;
+            ctx.fillRect(startX + spacing, yStart - errorHeight, barWidth, errorHeight);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Ýalňyşlyk', startX + spacing + barWidth/2, yStart + 20);
+            ctx.fillText('±' + error.toFixed(3), startX + spacing + barWidth/2, yStart + 35);
+            
+            // Oňyn we otrisatel çäkler
+            ctx.fillStyle = '#28a745';
+            const maxHeight = (avg + error) * 100;
+            ctx.fillRect(startX + spacing*2, yStart - maxHeight, barWidth, maxHeight);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Maks', startX + spacing*2 + barWidth/2, yStart + 20);
+            ctx.fillText((avg + error).toFixed(2), startX + spacing*2 + barWidth/2, yStart + 35);
+            
+            ctx.fillStyle = '#ffc107';
+            const minHeight = (avg - error) * 100;
+            ctx.fillRect(startX + spacing*3, yStart - minHeight, barWidth, minHeight);
+            ctx.fillStyle = '#333';
+            ctx.fillText('Min', startX + spacing*3 + barWidth/2, yStart + 20);
+            ctx.fillText((avg - error).toFixed(2), startX + spacing*3 + barWidth/2, yStart + 35);
+        }
+
+        // Ölçeg tablisasyny görkezmek
+        function displayMeasurementTable(meas, avg, absErr, relErr) {
+            const display = document.getElementById('measurementDisplay');
+            const dataDiv = document.getElementById('measurementData');
+            
+            let html = '<div class="measurement-row"><strong>Ölçeg №</strong><strong>Baha (mm)</strong><strong>Tapawut (mm)</strong></div>';
+            
+            meas.forEach((m, i) => {
+                const diff = Math.abs(m - avg);
+                html += `<div class="measurement-row">
+                    <span>${i + 1}</span>
+                    <span>${m.toFixed(2)}</span>
+                    <span>${diff.toFixed(3)}</span>
+                </div>`;
+            });
+            
+            html += `<div class="measurement-row" style="background: #667eea15; margin-top: 10px; padding: 15px;">
+                <strong>Ortaça baha:</strong>
+                <span class="highlight">${avg.toFixed(2)} mm</span>
+                <span></span>
+            </div>`;
+            
+            html += `<div class="measurement-row" style="background: #764ba215;">
+                <strong>Absolýut ýalňyşlyk:</strong>
+                <span class="highlight">±${absErr.toFixed(3)} mm</span>
+                <span></span>
+            </div>`;
+            
+            html += `<div class="measurement-row" style="background: #667eea15;">
+                <strong>Görelde ýalňyşlyk:</strong>
+                <span class="highlight">${relErr.toFixed(2)}%</span>
+                <span></span>
+            </div>`;
+            
+            html += `<div class="measurement-row" style="background: #764ba230; margin-top: 10px; padding: 15px;">
+                <strong>NETIJE:</strong>
+                <span class="highlight" style="font-size: 1.2em;">Δl = (${avg.toFixed(2)} ± ${absErr.toFixed(3)}) mm</span>
+                <span></span>
+            </div>`;
+            
+            dataDiv.innerHTML = html;
+            display.style.display = 'block';
+        }
+
+        // Başlangyç ýagdaýy çyzmak
+        drawInitialState();
+    </script>
+</body>
+</html>
